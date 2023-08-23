@@ -11,7 +11,7 @@ flowchart TD
 At the core of this project are dockerized deployments of the [Signal Messenger API](https://github.com/bbernhard/signal-cli-rest-api), and [Llama.cpp server](https://github.com/abetlen/llama-cpp-python#web-server). The middleware is custom code to glue it all together.
 
 ### Chatbot Personality:
-The "personality" is defined by prompt injection in the LLM handler file. Currently Vulcan is set to act as a robotic pirate.
+The "personality" is defined by prompt injection in the LLM handler file. Currently Vulcan is set to act as a robotic pirate.  
 ![image](https://github.com/DecafSunrise/Vulcan/assets/36832027/68265ad0-ba9b-4952-bfd5-a4413de3e895)
 
 
