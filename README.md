@@ -14,6 +14,12 @@ At the core of this project are dockerized deployments of the [Signal Messenger 
 The "personality" is defined by prompt injection in the LLM handler file. Currently Vulcan is set to act as a robotic pirate.  
 ![image](https://github.com/DecafSunrise/Vulcan/assets/36832027/68265ad0-ba9b-4952-bfd5-a4413de3e895)
 
+### Emotional State:
+The emotional state is managed by a state machine (defined below). 
+- If he gets a rude message, it'll have a chance to get 'Angry' or 'Sad'.
+- If he recieves a compliment, his mood improves.
+- If he gets too many boring messages in a row, he gets "bored" and asks a question.
+![image](https://github.com/DecafSunrise/Vulcan/assets/36832027/fc815b57-37b7-4007-96f0-990021980607)
 
 ### Can I use this for my own projects?:
 Absolutely! You'll probably need to make changes to the configuration though
@@ -23,7 +29,11 @@ Absolutely! You'll probably need to make changes to the configuration though
 ![image](https://github.com/DecafSunrise/Vulcan/assets/36832027/5871a84a-75f2-4668-a209-e8c3a22bb44f)
 
 ### Next steps:
-- Proper logging of messages
-- State machine to simulate "moods"
-- Fine-grained control of which Signal chats to respond to
+- ~~State machine to simulate "moods"~~
 - Personality tuning
+    - Allow high reputation conversational partners to influence the personality
+- Proper logging of messages
+- Fine-grained control of which Signal chats to respond to
+- Memory
+    - Short term/conversational memory
+    - Long term/database memory
