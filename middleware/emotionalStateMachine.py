@@ -3,6 +3,10 @@ import json
 
 import random
 
+from middleware.llmHandler import check_rude_message
+from middleware.llmHandler import handle_model_interaction
+from middleware.nlp import check_nice_message
+
 from statemachine import StateMachine, State
 
 class emotional_state(StateMachine):
@@ -96,17 +100,17 @@ class emotional_state(StateMachine):
     ## Handle Bored
     def on_get_bored(self):
         # Content to Curious
-        print(">> I'm bored!")
+        print("Internal: I'm bored!")
         ## random.choice([ask_question(), send_fun_fact()])
         
     def on_still_curious(self):
         # Curious to Itself
-        print(">> I'm still curious")
+        print("Internal: I'm still curious")
         ## Ask a clarifying question
         
     def on_curiosity_sated(self):
         # Curious to Contented
-        print(">> Interesting, I'll have to remember that")
+        print("Internal: Interesting, I'll have to remember that")
         
         ## Bump the mood because he's learning, and mimick forgetting you were upset
         self.mood += 1
@@ -116,7 +120,7 @@ class emotional_state(StateMachine):
     ## Handle rude messages
     def on_get_offended(self):
         # Contented to Offended
-        print(">> That was rude!")
+        print("Internal: That was rude!")
         self.mood -= 1
         if self.gassed_up == True:
             self.get_pissed()
@@ -125,48 +129,87 @@ class emotional_state(StateMachine):
     
     def on_get_pissed(self):
         # Offended to Angry
-        print(">> That pissed me off")
+        print("Internal: That pissed me off")
     
     def on_get_heckled(self):
         # Angry to itself
         self.mood -= 1
-        print(">> I'm just gonna keep razzing you")
+        print("Internal: I'm just gonna keep razzing you")
         ## send_rebuke()
     
     def on_get_apology(self):
         # Angry to Contented
         self.gassed_up = False
         self.mood += 1
-        print(">> Aww, it's okay")
+        print("Internal: Aww, it's okay")
     
     def on_get_lonely(self):
         # Contented to Sad, based on mood threshold
-        print(">> I don't think they like me")
+        print("Internal: I don't think they like me")
         
     def on_get_sad(self):
         # Offended to Sad
-        print(">> That bummed me out")
+        print("Internal:That bummed me out")
         
     def on_get_bullied(self):
         # Sad to itself
         self.mood -= 1
-        print(">> They keep being mean to me")
+        print("Internal: They keep being mean to me")
     
     def on_get_peptalk(self):
         # Sad to Contented
         self.mood += 1
-        print(">> Thanks, I'm feeling better now")
+        print("Internal: Thanks, I'm feeling better now")
         ## send_cheered_up()
         
         
     def on_get_complement(self):
         # Contented to Happy
-        print(">> That made me feel really good!")
+        print("Internal: That made me feel really good!")
         self.gassed_up = True
         self.mood += 1
         self.chilled_out()
         ## send_complement_response()
         
     def on_chilled_out(self):
-        print('>> Back to baseline...')
+        print('Internal: Back to baseline...')
     
+def stateful_message_handler(message, sm):
+    """
+    Do state machine ops on a new message. Returns a string from the model
+    """
+        
+    rude_message = check_rude_message(message)
+    nice_message = check_nice_message(message)
+    if nice_message==True:
+        if sm.current_state.id == 'contented':
+            sm.get_complement()
+        if sm.current_state.id == 'angry':
+            sm.get_apology()
+        if sm.current_state.id == 'sad':
+            sm.get_peptalk()
+
+    if rude_message==True: 
+        if sm.current_state.id == 'contented':
+            sm.get_offended()
+        ## This is double calling angry
+        if sm.current_state.id == 'angry':
+            sm.get_heckled()
+        if sm.current_state.id == 'sad':
+            sm.get_bullied()    
+    
+    return handle_model_interaction(message, mood=sm.current_state.id)
+
+def formatted_reply(message, sm):
+    """
+    Format the LLM response as a reply
+    """
+    try:
+        model_response = stateful_message_handler(message, sm=sm)
+        formatted_response = f'>>"{message}":\n\n{model_response}'
+        print(formatted_response)
+
+        return formatted_response
+    except:
+        print("llm failed")
+        return

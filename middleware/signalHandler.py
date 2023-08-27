@@ -131,3 +131,22 @@ def convert_envelope(message_json_flattened):
     outdict['chatType'] = group_type
     
     return outdict
+
+def get_clean_new_envelopes():
+    new_envelopes = get_new_messages()
+    if new_envelopes != []:
+        converted_new_envelopes = [convert_envelope(flatten_json(i)) for i in new_envelopes]
+
+        while None in converted_new_envelopes:
+            converted_new_envelopes.remove(None)
+#         if converted_new_envelopes == []:
+#             pass
+        return converted_new_envelopes
+    else:
+        return []
+
+def filter_to_relevant_messages(messages):
+    return [i for i in messages if 'vulcan' in i['message'].lower()]
+
+def clean_envelope_to_raw_messages(envelope_list):
+    return [message['message'] for message in envelope_list]
