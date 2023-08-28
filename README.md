@@ -32,8 +32,9 @@ Absolutely! You'll probably need to make changes to the configuration though
 - ~~State machine to simulate "moods"~~
 - Personality tuning
     - Allow high reputation conversational partners to influence the personality
-- Proper logging of messages
+- ~~Proper logging of messages~~
 - Fine-grained control of which Signal chats to respond to
+    - ~~Reply to new chats by default, on wakeword~~
 - Memory
     - Short term/conversational memory
     - Long term/database memory
