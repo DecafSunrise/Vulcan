@@ -11,8 +11,10 @@ load_dotenv()
 
 llama_server = os.getenv('llama_server')
 
+# TODO: Move this to an API endpoint call
+wakeword = 'Vulcan'
 trope = 'punk pirate'
-personality = f"""You are a robotic assistant named Vulcan. 
+personality = f"""You are a robotic assistant named {wakeword}. 
                 If you need to refer to your conversation partner, refer to them as Meatbag.
                 You are a {trope}, but also educated. You can use some {trope} lingo, but don't overdo it.
                 Don't tell your conversational partner that you're a {trope}.

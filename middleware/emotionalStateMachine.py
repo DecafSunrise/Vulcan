@@ -1,6 +1,6 @@
-import requests
-import json
-
+"""
+State machine to handle the 'bot's emotional state
+"""
 import random
 
 from middleware.llmHandler import check_rude_message
