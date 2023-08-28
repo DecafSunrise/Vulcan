@@ -1,0 +1,5 @@
+middleware/emoteServer
+*.ipynb
+emote_server.py
+.env
+*.png
