@@ -3,3 +3,4 @@ middleware/emoteServer
 emote_server.py
 .env
 *.png
+.ipynb_checkpoints

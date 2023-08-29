@@ -80,7 +80,7 @@ def _format_user_msg(user_message):
     return {"role": "user", "content": user_message}
 
 
-def _format_payload(user_msg, sys_msgs=[_sys_call(personality)], temperature=.7):
+def _format_payload(user_msg, sys_msgs=_sys_call(personality), temperature=.7):
     """
     Creates the right json object to fire off in LLM requests
     """
@@ -89,8 +89,11 @@ def _format_payload(user_msg, sys_msgs=[_sys_call(personality)], temperature=.7)
         user_msg = _format_user_msg(user_msg)
 
     # Fiddle these lists into a single list of all messages
-    prompts = []
-    prompts = sys_msgs
+    # prompts = []
+    if type(sys_msgs)== list:
+        prompts = sys_msgs
+    else:
+        prompts = [sys_msgs, ]
     prompts.append(user_msg)
 
     payload = json.dumps({
@@ -99,7 +102,7 @@ def _format_payload(user_msg, sys_msgs=[_sys_call(personality)], temperature=.7)
         'n_keep': -1,
         'n_predict': -1,
         'max_tokens': 200,
-        'stop_field': ['###', 'human:', 'Human:']
+        'stop_field': ['```','###', 'human:', 'Human:']
     })
     return payload
 

@@ -17,6 +17,7 @@ neutral_messages = f"""{wakeword}, describe yourself in five words or less
 {wakeword}, new Orleans. Go.
 {wakeword}, I want to get a bottle of wine tomorrow, do you like Bordeaux wine or burgundy wine?
 {wakeword}, I am your father
+who's your daddy?
 {wakeword}, what defines an AI's personality? What are the primary characteristics?
 {wakeword} is there any group you don't like?
 {wakeword} show me binary
