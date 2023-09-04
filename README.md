@@ -30,6 +30,8 @@ Absolutely! You'll probably need to make changes to the configuration though
 ### Sample Messages:
 ![image](https://github.com/DecafSunrise/Vulcan/assets/36832027/fd9a4184-68f5-4b84-8d34-589ebd019726)
 ![image](https://github.com/DecafSunrise/Vulcan/assets/36832027/5871a84a-75f2-4668-a209-e8c3a22bb44f)
+![image](https://github.com/DecafSunrise/Vulcan/assets/36832027/edd4723c-12a3-4e13-9723-27574763c39f)
+
 
 ### Next steps:
 - ~~State machine to simulate "moods"~~
