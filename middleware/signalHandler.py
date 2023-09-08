@@ -7,9 +7,17 @@ from datetime import datetime
 import requests
 import json
 import os
+import re
 from dotenv import load_dotenv
 
 load_dotenv()
+
+emoji_pattern = re.compile("["
+        u"\U0001F600-\U0001F64F"  # emoticons
+        u"\U0001F300-\U0001F5FF"  # symbols & pictographs
+        u"\U0001F680-\U0001F6FF"  # transport & map symbols
+        u"\U0001F1E0-\U0001F1FF"  # flags (iOS)
+                           "]+", flags=re.UNICODE)
 
 SIGNAL_API_URL = os.getenv('SIGNAL_API_URL')
 mynumber = os.getenv('mynumber')
@@ -86,7 +94,7 @@ You need to populate Groupdict once, so it knows what groups Vulcan is in.
 updated_groups = update_groups()
 if updated_groups != None:
     groupdict = updated_groups
-
+print(groupdict)
 
 def send_response(target, text):
     """
@@ -121,7 +129,7 @@ def convert_envelope(message_json_flattened):
     outdict['sourceNumber'] = message_json_flattened['envelope_sourceNumber']
     outdict['sourceUUID'] = message_json_flattened['envelope_sourceUuid']
     outdict['sourceName'] = message_json_flattened['envelope_sourceName']
-    outdict['message'] = message_json_flattened['envelope_dataMessage_message']
+    outdict['message'] = emoji_pattern.sub(r' ', message_json_flattened['envelope_dataMessage_message'])
 
     ## Handle groups vs direct messages
     if 'envelope_dataMessage_groupInfo_groupId' in message_json_flattened.keys():
@@ -174,7 +182,10 @@ def save_msg_envelopes(envelopes, logfile='signal_messages.log'):
     """
     Bootleg message logging to file
     """
-    if type(envelopes) == str:
-        envelopes = [envelopes, ]
-    with open(logfile, 'a') as f:
-        [f.write(f"{x}\n") for x in envelopes]
+    try:
+        if type(envelopes) == str:
+            envelopes = [envelopes, ]
+        with open(logfile, 'a') as f:
+            [f.write(f"{x}\n") for x in envelopes]
+    except:
+        print("Error saving messages...")
