@@ -1,0 +1,55 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h1>Personality Prompt</h1>
+<div class="text-area-container">
+<!--    <label for="inputText">Enter text:</label>-->
+    <textarea id="inputText" name="inputText" rows="50" cols="100"></textarea>
+    <br>
+    <button type="button" id="saveButton">Save</button>
+</div>
+
+<script>
+    // Function to load and pre-fill the textarea with file contents
+    function prefillTextarea() {
+        fetch("/api/get_inputs")
+            .then(response => response.json())
+            .then(data => {
+                if ("personality.txt" in data) {
+                    const fileContent = data["personality.txt"];
+                    document.getElementById("inputText").value = fileContent; // Pre-fill the textarea
+                }
+            })
+            .catch(error => {
+                console.error("Error fetching file content:", error);
+            });
+    }
+
+    // Function to save user input to a file
+    function saveInputToFile() {
+        const inputText = document.getElementById("inputText").value;
+
+        fetch("/save_input", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ "filename": "personality.txt", "text": inputText }),
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data.message);
+                // Optionally, you can display a success message here
+            })
+            .catch(error => {
+                console.error("Error saving input:", error);
+            });
+    }
+
+    // Call the function to pre-fill the textarea on page load
+    window.addEventListener("load", prefillTextarea);
+
+    // Attach a click event handler to the Save button
+    document.getElementById("saveButton").addEventListener("click", saveInputToFile);
+</script>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h1>Overview</h1>
+
+<!-- Display the image -->
+<img src="{{ url_for('static', filename='images/mood_graph.png') }}" alt="Emotional State" class="logo-image">
+
+<!-- Display content from page1.txt -->
+<h2>System Prompts:</h2>
+<pre data-block="system_content">
+{% block system_content %}
+{# Load and display content from page1.txt #}
+{% endblock %}
+</pre>
+
+<!-- Display content from page2.txt -->
+<h2>Personality Prompts:</h2>
+<pre data-block="personality_content">
+{% block personality_content %}
+{# Load and display content from page2.txt #}
+{% endblock %}
+</pre>
+
+<script>
+    // Function to load and display content from page1.txt and page2.txt
+    function loadPageContents() {
+        fetch("/api/get_inputs")
+            .then(response => response.json())
+            .then(data => {
+                if ("system.txt" in data) {
+                    document.querySelector('[data-block="system_content"]').textContent = data["system.txt"];
+                }
+                if ("personality.txt" in data) {
+                    document.querySelector('[data-block="personality_content"]').textContent = data["personality.txt"];
+                }
+            })
+            .catch(error => {
+                console.error("Error fetching content:", error);
+            });
+    }
+
+    // Call the function to load content on page load
+    window.addEventListener("load", loadPageContents);
+</script>
+{% endblock %}
